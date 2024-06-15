@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestController;
 import mx.org.jamexico.clase28.alumno.model.Alumno;
 import mx.org.jamexico.clase28.alumno.service.AlumnoService;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
@@ -43,13 +40,9 @@ public class AlumnoController {
 
   @GetMapping("id/{idReq}")
   public ResponseEntity<Alumno> getAlumnoById(@PathVariable UUID idReq) {
-    Optional<Alumno> alumnoOptional;
-    alumnoOptional = alumnoService.regresaAlumnoPorId(idReq);
-    if (alumnoOptional.isPresent()) {
-      Alumno alumnoResp = alumnoOptional.get();
-      return ResponseEntity.ok(alumnoResp);
-    }
-    return ResponseEntity.notFound().build();
+    Alumno alumnoResp = alumnoService.regresaAlumnoPorId(idReq);
+
+    return ResponseEntity.ok(alumnoResp);
   }
 
   @DeleteMapping("borrar/{idReq}")
