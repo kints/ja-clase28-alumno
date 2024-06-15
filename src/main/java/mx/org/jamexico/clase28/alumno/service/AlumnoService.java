@@ -24,29 +24,20 @@ public class AlumnoService {
     return alumnoResp;
   }
 
-  public Optional<Alumno> regresaAlumnoPorId(UUID id) {
-    Optional<Alumno> alumnoOptional;
-    alumnoOptional = alumnoRepository.findById(id);
-    return alumnoOptional;
+  public Alumno regresaAlumnoPorId(UUID id) {
+    Optional<Alumno> alumnoOptional = alumnoRepository.findById(id);
+    if (!alumnoOptional.isPresent()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el ID");
+    }
+    return alumnoOptional.get();
   }
 
   public void borrarAlumno(UUID idreq) {
-    Optional<Alumno> alumnoOptional;
-    alumnoOptional = alumnoRepository.findById(idreq);
-    if (!alumnoOptional.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el ID");
-    }
-    Alumno alumnoParaBorrar = alumnoOptional.get();
-    alumnoRepository.delete(alumnoParaBorrar);
+    alumnoRepository.delete(regresaAlumnoPorId(idreq));
   }
 
   public Alumno actualizaAlumno(UUID idReq, Alumno alumnoReq) {
-    Optional<Alumno> alumnoOptional;
-    alumnoOptional = alumnoRepository.findById(idReq);
-    if (!alumnoOptional.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró el ID");
-    }
-    Alumno alumnoActualizar = alumnoOptional.get();
+    Alumno alumnoActualizar = regresaAlumnoPorId(idReq);
     alumnoActualizar.setNombre(alumnoReq.getNombre());
     alumnoActualizar.setApellidoPaterno(alumnoReq.getApellidoPaterno());
     alumnoActualizar.setApellidoMaterno(alumnoReq.getApellidoMaterno());
